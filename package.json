@@ -1,0 +1,11 @@
+{
+  "name": "Rest_API",
+  "version": "1.0.0",
+  "description": "Rest API server",
+  "main": "index.js",
+  "author": "PanWojti",
+  "license": "MIT",
+  "dependencies": {
+    "express": "4.17.1"
+  }
+}
