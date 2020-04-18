@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const cors = require('cors');
 const uuidv4 = require('uuid/v4');
+const db = require('./db');
 
 const app = express();
 
@@ -9,19 +10,14 @@ app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-const db = [
-  { id: 1, author: 'John Doe', text: 'This company is worth every coin!' },
-  { id: 2, author: 'Amanda Doe', text: 'They really know how to make you happy.' },
-];
-
 //returns all records from database
 app.get('/testimonials', (req, res) => {
-  res.json(db);
+  res.json(db.testimonials);
 });
 
 //returns a random element from database array
 app.get('/testimonials/random', (req, res) => {
-  const randomElement = db[Math.floor(Math.random() * db.length)];
+  const randomElement = db.testimonials[Math.floor(Math.random() * db.testimonials.length)];
   res.json(randomElement);
 });
 
@@ -29,7 +25,7 @@ app.get('/testimonials/random', (req, res) => {
 app.get('/testimonials/:id', (req, res) => {
   const id = req.params.id;
 
-  for (let element of db) {
+  for (let element of db.testimonials) {
     if (element.id == id) {
       res.json(element);
     }
@@ -41,7 +37,7 @@ app.post('/testimonials', (req, res) => {
   const { author, text } = req.body;
 
   const newElement = { id: uuidv4(), author: author, text: text };
-  db.push(newElement);
+  db.testimonials.push(newElement);
 
   res.json({ message: 'OK' });
 });
@@ -51,7 +47,7 @@ app.put('/testimonials/:id', (req, res) => {
   const { author, text } = req.body;
   const id = req.params.id;
 
-  for (let element of db) {
+  for (let element of db.testimonials) {
     if (element.id == id) {
       element.author = author;
       element.text = text;
@@ -65,9 +61,9 @@ app.put('/testimonials/:id', (req, res) => {
 app.delete('/testimonials/:id', (req, res) => {
   const id = req.params.id;
 
-  for (let element of db) {
+  for (let element of db.testimonials) {
     if (element.id == id) {
-      db.splice(db.indexOf(element),1);
+      db.testimonials.splice(db.testimonials.indexOf(element),1);
     }
   }
 
