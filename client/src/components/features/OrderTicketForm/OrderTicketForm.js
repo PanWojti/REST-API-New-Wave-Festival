@@ -11,53 +11,54 @@ class OrderTicketForm extends React.Component {
       client: '',
       email: '',
       day: 1,
-      seat: '',
+      seat: ''
     },
-    isError: false,
-  }
+    isError: false
+  };
 
   updateSeat = (e, seatId) => {
     const { order } = this.state;
 
     e.preventDefault();
     this.setState({ order: { ...order, seat: seatId }});
-  }
+  };
 
   updateTextField = ({ target }) => {
     const { order } = this.state;
     const { value, name } = target;
 
     this.setState({ order: { ...order, [name]: value }});
-  }
+  };
 
   updateNumberField = ({ target }) => {
     const { order } = this.state;
     const { value, name } = target;
 
     this.setState({ order: { ...order, [name]: parseInt(value) }});
-  }
+  };
 
   submitForm = async (e) => {
     const { order } = this.state;
-    const { addSeat } = this.props;
+    const { addSeat, loadSeats } = this.props;
 
     e.preventDefault();
 
     if(order.client && order.email && order.day && order.seat) {
-      addSeat(order);
-      this.setState({ 
+      await addSeat(order);
+      loadSeats();
+      this.setState({
         order: {
           client: '',
           email: '',
           day: 1,
-          seat: '',
+          seat: ''
         },
-        isError: false,
+        isError: false
       });
     } else {
       this.setState({ isError: true });
     }
-  }
+  };
 
   render() {
 
@@ -98,15 +99,15 @@ class OrderTicketForm extends React.Component {
             <Button color="primary" className="mt-3">Submit</Button>
           </Col>
           <Col xs="12" md="6">
-            <SeatChooser 
+            <SeatChooser
               chosenDay={order.day}
-              chosenSeat={order.seat} 
+              chosenSeat={order.seat}
               updateSeat={updateSeat} />
           </Col>
         </Row>
       </Form>
-    )
-  };
+    );
+  }
 }
 
 export default OrderTicketForm;
