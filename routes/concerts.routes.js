@@ -7,7 +7,7 @@ const uuidv4 = require('uuid/v4');
 
 // get all posts
 router.route('/concerts').get((req, res) => {
-  res.json(db.concerts);
+  return res.json(db.concerts);
 });
 
 //returns the one element of database array that matches the id
@@ -16,7 +16,7 @@ router.route('/concerts/:id').get((req, res) => {
 
   for (let element of db.concerts) {
     if (element.id == id) {
-      res.json(element);
+      return res.json(element);
     }
   }
 });
@@ -28,7 +28,7 @@ router.route('/concerts').post((req, res) => {
   const newElement = { id: uuidv4(), performer: performer, genre: genre, price: price, day: day, image: image };
   db.concerts.push(newElement);
 
-  res.json({ message: 'OK' });
+  return res.json({ message: 'OK' });
 });
 
 //edit array element with matching id
@@ -46,7 +46,7 @@ router.route('/concerts/:id').put((req, res) => {
     }
   }
 
-  res.json({ message: 'OK' });
+  return res.json({ message: 'OK' });
 });
 
 //removes one element from database array with matching id
@@ -59,7 +59,7 @@ router.route('/concerts/:id').delete((req, res) => {
     }
   }
 
-  res.json({ message: 'OK' });
+  return res.json({ message: 'OK' });
 });
 
 /* ... */
