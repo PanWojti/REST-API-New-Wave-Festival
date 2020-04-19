@@ -10,7 +10,7 @@
   "author": "PanWojti",
   "license": "MIT",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "node server.js",
     "build": "cd client && npm install && npm build"
   },
   "dependencies": {
