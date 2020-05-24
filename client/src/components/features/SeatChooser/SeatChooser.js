@@ -1,35 +1,36 @@
 import React from 'react';
 import { Button, Progress, Alert } from 'reactstrap';
+import io from 'socket.io-client';
 
 import './SeatChooser.scss';
 
 class SeatChooser extends React.Component {
-  startInterval() {
-    const { loadSeats } = this.props;
-    setInterval(loadSeats, 120000);
-  }
-
-  stopInterval() {
-    clearInterval(this.startInterval);
-  }
 
   componentDidMount() {
-    const { loadSeats } = this.props;
+    if (process.env.NODE_ENV === "production") {
+      this.socket = io.connect();
+    } else {
+      this.socket = io.connect('http://localhost:8000');
+    }
+    const { loadSeats, loadSeatsData } = this.props;
     loadSeats();
-    this.startInterval();
+    this.socket.on('seatsUpdated', seats => {
+      loadSeatsData(seats);
+    });
+    //this.startInterval();
   }
 
-  componentWillUnmount() {
-    this.stopInterval();
-  }
+  //componentWillUnmount() {
+  //  this.stopInterval();
+  //}
 
-  isTaken = (seatId) => {
+  isTaken = seatId => {
     const { seats, chosenDay } = this.props;
 
-    return (seats.some(item => (item.seat === seatId && item.day === chosenDay)));
+    return seats.some(item => item.seat === seatId && item.day === chosenDay);
   };
 
-  prepareSeat = (seatId) => {
+  prepareSeat = seatId => {
     const { chosenSeat, updateSeat } = this.props;
     const { isTaken } = this;
 
